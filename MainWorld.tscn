@@ -1,30 +1,3 @@
-[gd_scene load_steps=5 format=3 uid="uid://bie5gboypdeag"]
-
-[ext_resource type="PackedScene" uid="uid://dvj77h7pfsmu" path="res://Player.tscn" id="1_fqhjb"]
-
-[sub_resource type="Environment" id="Environment_fqhjb"]
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_538sl"]
-
-[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_fqhjb"]
-
-[node name="Node3D" type="Node3D"]
-
-[node name="Player" parent="." instance=ExtResource("1_fqhjb")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.404, 0)
-
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource("Environment_fqhjb")
-
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.7071068, 0.61237246, -0.35355335, 0, 0.49999997, 0.86602545, 0.7071068, -0.61237246, 0.35355335, -69.5, 400, 40.9)
-
-[node name="Ground" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.001, 0, 0, 0, 1, 0, 0, 0)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
-mesh = SubResource("PlaneMesh_538sl")
-skeleton = NodePath("../..")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
-shape = SubResource("WorldBoundaryShape3D_fqhjb")
+version https://git-lfs.github.com/spec/v1
+oid sha256:8091923a7f715685cd5a45b77538e63c2b9e0d0f9b5d0bf72c9fcfff524be65b
+size 118806978

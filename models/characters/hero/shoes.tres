@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://b1hn8j5o7y2rk"]
+
+[ext_resource type="Texture2D" uid="uid://pry6msh7ij2s" path="res://models/characters/hero/civilian 3_Shoes_diffuse.png" id="1_2t4kl"]
+[ext_resource type="Texture2D" uid="uid://ctnqwbg0oi1l" path="res://models/characters/hero/civilian 3_Shoes_gloss.png" id="2_n73vm"]
+[ext_resource type="Texture2D" uid="uid://bijqkuwjyro7a" path="res://models/characters/hero/civilian 3_Shoes_normal.png" id="3_ajrrq"]
+[ext_resource type="Texture2D" uid="uid://c6v1dv32ispes" path="res://models/characters/hero/civilian 3_Shoes_specular.png" id="4_tsmb5"]
+
+[resource]
+albedo_texture = ExtResource("1_2t4kl")
+metallic = 1.0
+metallic_texture = ExtResource("2_n73vm")
+roughness_texture = ExtResource("4_tsmb5")
+normal_enabled = true
+normal_texture = ExtResource("3_ajrrq")

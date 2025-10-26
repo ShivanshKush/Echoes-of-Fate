@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://dbl5jdaq8fl6y"]
+
+[ext_resource type="Texture2D" uid="uid://c1t701jcmjnx4" path="res://models/characters/hero/civilian 3_Top_diffuse.png" id="1_gsbae"]
+[ext_resource type="Texture2D" uid="uid://eukkl4l28ptn" path="res://models/characters/hero/civilian 3_Top_gloss.png" id="2_pn7qr"]
+[ext_resource type="Texture2D" uid="uid://dmax4bed0ac2q" path="res://models/characters/hero/civilian 3_Top_normal.png" id="3_s5dqf"]
+[ext_resource type="Texture2D" uid="uid://bmqrmhkkmjup0" path="res://models/characters/hero/civilian 3_Top_specular.png" id="4_dehqa"]
+
+[resource]
+albedo_texture = ExtResource("1_gsbae")
+metallic = 1.0
+metallic_texture = ExtResource("2_pn7qr")
+roughness_texture = ExtResource("4_dehqa")
+normal_enabled = true
+normal_texture = ExtResource("3_s5dqf")

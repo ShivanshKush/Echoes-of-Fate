@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnnyj4ung1vlh"]
+
+[ext_resource type="PackedScene" uid="uid://m5svbetukq3t" path="res://models/characters/npc-farmer/Farmer.fbx" id="1_ideak"]
+[ext_resource type="Script" uid="uid://dorfwhqox5m14" path="res://NPC.gd" id="1_ll5ud"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xxcha"]
+radius = 0.61279297
+height = 1.9885254
+
+[node name="NPC" type="Area3D"]
+script = ExtResource("1_ll5ud")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0057373047, 0)
+shape = SubResource("CapsuleShape3D_xxcha")
+
+[node name="Farmer" parent="." instance=ExtResource("1_ideak")]
+transform = Transform3D(0.99995357, -0.009634068, 0, 0.009634068, 0.99995357, 0, 0, 0, 1, 0.005613327, -0.841159, -0.0035783052)

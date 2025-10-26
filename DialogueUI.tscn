@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://beb6hc6twyolt"]
+
+[ext_resource type="Script" uid="uid://dwqk6iy6gpcf4" path="res://DialogueUI.gd" id="1_obd5m"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0ftpb"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+
+[node name="DialogueUI" type="Control"]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("1_obd5m")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="TextLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/line_spacing = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_0ftpb")
+text = "Press 'E' to close...."

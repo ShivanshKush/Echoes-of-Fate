@@ -21,3 +21,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.58906555, 4)
 
 [node name="combined" parent="." instance=ExtResource("2_kpjcp")]
 transform = Transform3D(-0.009998477, 0, 0.00017452457, 0, 0.01, 0, -0.00017452457, 0, -0.009998477, 0, 0, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.94335014, -0.33179894, 0, 0.33179894, 0.94335014, 0, 1.6543775, 0)
+target_position = Vector3(0, -1, -3)
