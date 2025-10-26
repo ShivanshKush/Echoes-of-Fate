@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=3 uid="uid://beb6hc6twyolt"]
+
+[ext_resource type="Script" uid="uid://c73m6rq88fvvy" path="res://Dialogue_UI.gd" id="1_0ftpb"]
+
+[node name="DialogueUI" type="Control"]
+layout_mode = 3
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("1_0ftpb")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PotraitDisplay" type="TextureRect" parent="Panel"]
+layout_mode = 1
+offset_left = 20.0
+offset_top = -120.0
+offset_right = 120.0
+offset_bottom = -20.0
+
+[node name="TextLabel" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/line_spacing = 3
+text = "Suppp!!"

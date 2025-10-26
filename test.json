@@ -1,0 +1,22 @@
+{
+	"dialogues": [
+		{
+			"speakerid": "hero",
+			"text": "supppp!!"
+		},
+		{
+			"speakerid": "farmer1",
+			"text": "hola"
+		}
+	],
+	"Sprites": [
+		{
+			"herospriteid": "hero.png",
+			"id": "hero"
+		},
+		{
+			"npcspriteid": "farmer.png",
+			"id": "farmer1"
+		}
+	]
+}

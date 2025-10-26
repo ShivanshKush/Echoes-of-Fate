@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvj77h7pfsmu"]
+
+[ext_resource type="Script" uid="uid://2kj67diqmqty" path="res://player.gd" id="1_xhfnw"]
+[ext_resource type="PackedScene" uid="uid://vo6yqp4d4u81" path="res://models/characters/hero/combined.fbx" id="2_kpjcp"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xhfnw"]
+
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+script = ExtResource("1_xhfnw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9035498, 0)
+shape = SubResource("CapsuleShape3D_xhfnw")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.58906555, 4)
+
+[node name="combined" parent="." instance=ExtResource("2_kpjcp")]
+transform = Transform3D(-0.009998477, 0, 0.00017452457, 0, 0.01, 0, -0.00017452457, 0, -0.009998477, 0, 0, 0)
