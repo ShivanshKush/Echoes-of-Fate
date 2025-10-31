@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://baeof6hjihwdb"
+
+[deps]
+
+files=["res://models/map/chunks/chunk_6_6/house_data.loc.translation", "res://models/map/chunks/chunk_6_6/house_data.loc.translation", "res://models/map/chunks/chunk_6_6/house_data.loc.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.scale.translation", "res://models/map/chunks/chunk_6_6/house_data.scale.translation", "res://models/map/chunks/chunk_6_6/house_data.scale.translation"]
+
+source_file="res://models/map/chunks/chunk_6_6/house_data.csv"
+dest_files=["res://models/map/chunks/chunk_6_6/house_data.loc.translation", "res://models/map/chunks/chunk_6_6/house_data.loc.translation", "res://models/map/chunks/chunk_6_6/house_data.loc.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.rot.translation", "res://models/map/chunks/chunk_6_6/house_data.scale.translation", "res://models/map/chunks/chunk_6_6/house_data.scale.translation", "res://models/map/chunks/chunk_6_6/house_data.scale.translation"]
+
+[params]
+
+compress=true
+delimiter=0

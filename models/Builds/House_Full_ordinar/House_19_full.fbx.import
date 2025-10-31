@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://b0jnwdr0flydf"
-path="res://.godot/imported/House_19_full.fbx-dd8ff6925f793f7eb58ba08d4c699508.scn"
+path="res://.godot/imported/House_19_full.fbx-28a95b5fb56d9fdb7cfad570ad3c3fdf.scn"
 
 [deps]
 
-source_file="res://models/Builds/House_Full_ordinar/House_19_full.fbx"
-dest_files=["res://.godot/imported/House_19_full.fbx-dd8ff6925f793f7eb58ba08d4c699508.scn"]
+source_file="res://models/builds/House_Full_ordinar/House_19_full.fbx"
+dest_files=["res://.godot/imported/House_19_full.fbx-28a95b5fb56d9fdb7cfad570ad3c3fdf.scn"]
 
 [params]
 

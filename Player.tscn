@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://dvj77h7pfsmu"]
 
 [ext_resource type="Script" uid="uid://2kj67diqmqty" path="res://player.gd" id="1_xhfnw"]
-[ext_resource type="PackedScene" uid="uid://vo6yqp4d4u81" path="res://models/characters/hero/combined.fbx" id="2_kpjcp"]
+[ext_resource type="PackedScene" uid="uid://vo6yqp4d4u81" path="res://models/characters/hero/hero.fbx" id="2_kpjcp"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xhfnw"]
 

@@ -1,0 +1,82 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://vo6yqp4d4u81"
+path="res://.godot/imported/hero.fbx-dac3ecfbbc609a07b8e43846d9ca0cdf.scn"
+
+[deps]
+
+source_file="res://models/characters/hero/hero.fbx"
+dest_files=["res://.godot/imported/hero.fbx-dac3ecfbbc609a07b8e43846d9ca0cdf.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=true
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"materials": {
+"Beard.001": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://models/characters/hero/resources/beard.tres",
+"use_external/path": "uid://e6vjf75s528y"
+},
+"Body.001": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://models/characters/hero/resources/body.tres",
+"use_external/path": "uid://ga16ky5ctfu4"
+},
+"Bottom.001": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://models/characters/hero/resources/hero_bottom.tres",
+"use_external/path": "uid://cw3w8knus7wx"
+},
+"Hair.001": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://models/characters/hero/resources/hair.tres",
+"use_external/path": "uid://bfcder0ifhwlh"
+},
+"Moustache.001": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://models/characters/hero/resources/mustache.tres",
+"use_external/path": "uid://b0joxeppehkqd"
+},
+"Shoes.001": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://models/characters/hero/resources/shoes.tres",
+"use_external/path": "uid://b1hn8j5o7y2rk"
+},
+"Top.001": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://models/characters/hero/resources/hero_top.tres",
+"use_external/path": "uid://dbl5jdaq8fl6y"
+}
+}
+}
+fbx/importer=0
+fbx/allow_geometry_helper_nodes=false
+fbx/embedded_image_handling=1
+fbx/naming_version=2

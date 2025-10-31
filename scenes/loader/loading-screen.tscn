@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://uja8bbpcvc0n"]
+
+[ext_resource type="Script" uid="uid://idndcnmp2cin" path="res://scenes/loader/loading_screen.gd" id="1_h67ek"]
+
+[node name="Root" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h67ek")
+
+[node name="Control" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="Label" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 543.0
+offset_top = 222.0
+offset_right = 618.0
+offset_bottom = 245.0
+theme_override_colors/font_color = Color(0.009404905, 0.009404905, 0.009404905, 1)
+text = "Loading..."
+
+[node name="ProgressBar" type="ProgressBar" parent="Control"]
+layout_mode = 0
+offset_left = 440.0
+offset_top = 256.0
+offset_right = 709.0
+offset_bottom = 283.0

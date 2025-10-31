@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dnnyj4ung1vlh"]
 
-[ext_resource type="PackedScene" uid="uid://m5svbetukq3t" path="res://models/characters/npc-farmer/Farmer.fbx" id="1_ideak"]
+[ext_resource type="PackedScene" uid="uid://m5svbetukq3t" path="res://models/characters/npcs/farmer/Farmer.fbx" id="1_ideak"]
 [ext_resource type="Script" uid="uid://dorfwhqox5m14" path="res://NPC.gd" id="1_ll5ud"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xxcha"]
