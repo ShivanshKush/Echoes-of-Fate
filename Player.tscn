@@ -17,7 +17,7 @@ shape = SubResource("CapsuleShape3D_xhfnw")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 
 [node name="Camera3D" type="Camera3D" parent="CameraPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.58906555, 4)
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 2, 2.5)
 
 [node name="combined" parent="." instance=ExtResource("2_kpjcp")]
 transform = Transform3D(-0.009998477, 0, 0.00017452457, 0, 0.01, 0, -0.00017452457, 0, -0.009998477, 0, 0, 0)
