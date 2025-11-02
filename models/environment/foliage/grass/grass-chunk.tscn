@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://e58jmiol5trh"]
+
+[ext_resource type="Script" uid="uid://clrktlh405rif" path="res://models/environment/foliage/grass/grass_chunk.gd" id="1_gtlbn"]
+
+[node name="Root" type="Node3D"]
+script = ExtResource("1_gtlbn")
+
+[node name="MultiMesh_Grass_Chunk" type="MultiMeshInstance3D" parent="."]

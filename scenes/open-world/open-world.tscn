@@ -1,4 +1,4 @@
-[gd_scene load_steps=379 format=4 uid="uid://bie5gboypdeag"]
+[gd_scene load_steps=383 format=4 uid="uid://bie5gboypdeag"]
 
 [ext_resource type="PackedScene" uid="uid://dvj77h7pfsmu" path="res://Player.tscn" id="1_numat"]
 [ext_resource type="Script" uid="uid://b6akiyfniqxta" path="res://scenes/open-world/open_world.gd" id="1_y5iem"]
@@ -8,6 +8,8 @@
 [ext_resource type="Texture2D" uid="uid://clkf3ub5mq4eh" path="res://models/environment/foliage/rocks/textures/Image_1.png" id="6_hkkxt"]
 [ext_resource type="Texture2D" uid="uid://fruciyiee42c" path="res://models/environment/foliage/rocks/textures/Image_2.png" id="7_ariur"]
 [ext_resource type="Texture2D" uid="uid://c167ba0lhcx3g" path="res://models/builds/houses/textures/rpgpp_lt_tex_a.png" id="8_cdbb7"]
+[ext_resource type="Texture2D" uid="uid://bgnjh5a1c57ra" path="res://models/environment/foliage/grass/textures/Grass_1.png" id="9_hkkxt"]
+[ext_resource type="Script" uid="uid://dh6tfng8b3kk8" path="res://scripts/camera.gd" id="10_ariur"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fqhjb"]
 load_path = "res://.godot/imported/Epic_BlueSunset_EquiRect_flat.png-ed34823f103b9ef593caeff5b240feeb.s3tc.ctex"
@@ -4954,17 +4956,45 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_dolmq")
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lh27k"]
+resource_name = "Material.001"
+transparency = 4
+cull_mode = 2
+albedo_texture = ExtResource("9_hkkxt")
+roughness = 0.5
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_y0dmq"]
+resource_name = "Grass_1_Plane_001"
+_surfaces = [{
+"aabb": AABB(-0.45000002, -0.15, -0.45000002, 0.90000004, 0.3, 0.90000004),
+"attribute_data": PackedByteArray("AAAAAP////8AAP////8AAAAAAAD+////AAD///7/AAA="),
+"format": 34896613399,
+"index_count": 12,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUA"),
+"material": SubResource("StandardMaterial3D_lh27k"),
+"name": "Material.001",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("//////9///8AAAAA/3//////AAD/f///AAD///9/////f///////v/9/AAAAAP+//38AAP///7//f///AAD/v/9/////f////3////9/////fwAA/38AAP9/AAD/fwAA")
+}]
+blend_shape_mode = 0
+
 [node name="Root" type="Node3D"]
 script = ExtResource("1_y5iem")
-
-[node name="Player" parent="." instance=ExtResource("1_numat")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+metadata/_edit_group_ = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_fd7vl")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.7071068, 0.61237246, -0.35355335, 0, 0.49999997, 0.86602545, 0.7071068, -0.61237246, 0.35355335, -69.5, 51.489426, 40.9)
+transform = Transform3D(0.7071068, 0.61237246, -0.35355338, 0, 0.49999997, 0.86602545, 0.7071068, -0.61237246, 0.35355338, -69.5, 51.489426, 40.9)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+current = true
+script = ExtResource("10_ariur")
+
+[node name="Player" parent="." instance=ExtResource("1_numat")]
 
 [node name="Tree" type="Node3D" parent="."]
 visible = false
@@ -5457,4 +5487,12 @@ skeleton = NodePath("")
 
 [node name="House_5" type="MeshInstance3D" parent="House"]
 mesh = SubResource("ArrayMesh_72wmp")
+skeleton = NodePath("")
+
+[node name="Grass" type="Node3D" parent="."]
+visible = false
+
+[node name="Grass_1" type="MeshInstance3D" parent="Grass"]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = SubResource("ArrayMesh_y0dmq")
 skeleton = NodePath("")

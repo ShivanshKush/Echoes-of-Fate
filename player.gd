@@ -2,27 +2,28 @@ extends CharacterBody3D
 
 @export var speed = 5.0
 @export var jump_velocity = 4.5
-@export var mouse_sensitivity = 0.3 
 
-@onready var camera_pivot = $CameraPivot
-@onready var anim_player = $combined/AnimationPlayer 
-@onready var raycast = $RayCast3D
+@onready var anim_player = $Player/combined/AnimationPlayer
+@onready var raycast = $Player/RayCast3D
+var camera_ref: Camera3D = null
 
 
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+var move_speed: float = 5.0
+var rotation_speed: float = 8.0 # smoothing factor
 
 
 func _ready():
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if DialogueUI:
 		DialogueUI.hide_box()
 
 
 func _unhandled_input(event):
-	if event.is_action_pressed("ui_cancel"):
-		if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			return
+	#if event.is_action_pressed("ui_cancel"):
+		#if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
+			#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			#return
 	
 	if event.is_action_pressed("interact"):
 		if DialogueUI.is_active:
@@ -39,60 +40,62 @@ func _unhandled_input(event):
 		
 
 	# --- Handle Left Click to re-capture mouse ---
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-
-	# --- Handle Mouse Look (only when mouse is captured) ---
-	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED and event is InputEventMouseMotion:
-		# Horizontal look (rotates the whole player)
-		rotate_y(deg_to_rad(-event.relative.x * mouse_sensitivity))
-		# Vertical look (rotates only the camera pivot)
-		camera_pivot.rotate_x(deg_to_rad(-event.relative.y * mouse_sensitivity))
-		# Clamp vertical look to prevent flipping
-		camera_pivot.rotation.x = clamp(camera_pivot.rotation.x, deg_to_rad(-90), deg_to_rad(90))
+	#if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		#if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+			#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
-func _physics_process(_delta):
+func _physics_process(delta):
 	# --- Stop ALL movement and input if dialogue is active ---
 	if DialogueUI.is_active:
 		# Release mouse so user can click (if we add buttons later)
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 		# Stop all velocity
 		velocity.x = 0
 		velocity.z = 0
 		move_and_slide() # Apply the zero velocity
 		return # Skip the rest of the physics process
-	else:
+	#else:
 		# Make sure mouse is captured if dialogue is closed
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+		#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 	# --- Gravity ---
 	if not is_on_floor():
-		velocity.y -= gravity * _delta
+		velocity.y -= gravity * delta
 
 	# --- Jumping ---
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = jump_velocity
 
-	# --- Walking ---
-	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	var direction = (transform.basis.z * input_dir.y + transform.basis.x * input_dir.x).normalized()
-
-	if direction:
-		velocity.x = direction.x * speed
-		velocity.z = direction.z * speed
+	var input_dir = Vector2(
+		Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
+		Input.get_action_strength("move_back") - Input.get_action_strength("move_forward")
+	)
+	input_dir = input_dir.normalized()
+	# get camera's forward/right on XZ plane
+	var cam_forward = camera_ref.global_transform.basis.z
+	var cam_right = camera_ref.global_transform.basis.x
+	cam_forward.y = 0
+	cam_right.y = 0
+	# ignore Y component to stay flat on ground
+	cam_forward = cam_forward.normalized()
+	cam_right = cam_right.normalized()
+	# move direction relative to camera
+	var move_dir = (cam_forward * input_dir.y + cam_right * input_dir.x).normalized()
+	if input_dir.length() > 0:
+		# move player
+		velocity.x = move_dir.x * move_speed
+		velocity.z = move_dir.z * move_speed
+		# smoothly rotate player towards move direction
+		var target_rot = atan2(-move_dir.x, -move_dir.z)
+		rotation.y = lerp_angle(rotation.y, target_rot, rotation_speed * delta)
 	else:
-		# Slow down (friction)
-		velocity.x = move_toward(velocity.x, 0, speed)
-		velocity.z = move_toward(velocity.z, 0, speed)
-
-	# --- Apply Movement ---
+		# stop horizontal movement
+		velocity.x = move_toward(velocity.x, 0, move_speed)
+		velocity.z = move_toward(velocity.z, 0, move_speed)
 	move_and_slide()
-	
 	# --- Update Animations (After moving) ---
-	_update_animations(direction)
-
+	_update_animations(move_dir)
 
 # This function handles all animation logic
 func _update_animations(move_direction):
