@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dvj77h7pfsmu" path="res://Player.tscn" id="1_numat"]
 [ext_resource type="Script" uid="uid://b6akiyfniqxta" path="res://scenes/open-world/open_world.gd" id="1_y5iem"]
+[ext_resource type="Texture2D" uid="uid://ck0q254vq10s8" path="res://skybox/Epic_BlueSunset_EquiRect_flat.png" id="2_eo6ov"]
 [ext_resource type="Texture2D" uid="uid://cdy8lx0ux0lbv" path="res://models/environment/foliage/trees/textures/color_1024x1024.jpg" id="3_pwsy2"]
 [ext_resource type="Texture2D" uid="uid://csggxqr52m8l3" path="res://models/environment/foliage/rocks/textures/Rocks.png" id="4_0owae"]
 [ext_resource type="Texture2D" uid="uid://bd3vsyr3ar7qq" path="res://models/environment/foliage/rocks/textures/Image_0.jpg" id="5_cdbb7"]
@@ -11,11 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://bgnjh5a1c57ra" path="res://models/environment/foliage/grass/textures/Grass_1.png" id="9_hkkxt"]
 [ext_resource type="Script" uid="uid://dh6tfng8b3kk8" path="res://scripts/camera.gd" id="10_ariur"]
 
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fqhjb"]
-load_path = "res://.godot/imported/Epic_BlueSunset_EquiRect_flat.png-ed34823f103b9ef593caeff5b240feeb.s3tc.ctex"
-
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_7u2t8"]
-panorama = SubResource("CompressedTexture2D_fqhjb")
+panorama = ExtResource("2_eo6ov")
 
 [sub_resource type="Sky" id="Sky_vhxcc"]
 sky_material = SubResource("PanoramaSkyMaterial_7u2t8")
