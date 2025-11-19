@@ -1,0 +1,4 @@
+ref_name,loc_x,loc_y,loc_z,rot_x,rot_y,rot_z,scale_x,scale_y,scale_z,no_multimesh
+Farmer,9.113,19.495,4.029,0,172.4,0,1,1,1,TRUE
+Lady,-7.672,18.437,-4.264,0,-5,0,1,1,1,TRUE
+Guard,21.552,18.947,-2.664,0,-24.8,0,1,1,1,TRUE

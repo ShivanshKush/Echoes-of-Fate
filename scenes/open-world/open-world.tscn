@@ -1,6 +1,6 @@
 [gd_scene load_steps=383 format=4 uid="uid://bie5gboypdeag"]
 
-[ext_resource type="PackedScene" uid="uid://dvj77h7pfsmu" path="res://Player.tscn" id="1_numat"]
+[ext_resource type="PackedScene" uid="uid://dvj77h7pfsmu" path="res://scenes/Player1/Player.tscn" id="1_numat"]
 [ext_resource type="Script" uid="uid://b6akiyfniqxta" path="res://scenes/open-world/open_world.gd" id="1_y5iem"]
 [ext_resource type="Texture2D" uid="uid://ck0q254vq10s8" path="res://skybox/Epic_BlueSunset_EquiRect_flat.png" id="2_eo6ov"]
 [ext_resource type="Texture2D" uid="uid://cdy8lx0ux0lbv" path="res://models/environment/foliage/trees/textures/color_1024x1024.jpg" id="3_pwsy2"]
@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://bd3vsyr3ar7qq" path="res://models/environment/foliage/rocks/textures/Image_0.jpg" id="5_cdbb7"]
 [ext_resource type="Texture2D" uid="uid://clkf3ub5mq4eh" path="res://models/environment/foliage/rocks/textures/Image_1.png" id="6_hkkxt"]
 [ext_resource type="Texture2D" uid="uid://fruciyiee42c" path="res://models/environment/foliage/rocks/textures/Image_2.png" id="7_ariur"]
-[ext_resource type="Texture2D" uid="uid://c167ba0lhcx3g" path="res://models/builds/houses/textures/rpgpp_lt_tex_a.png" id="8_cdbb7"]
+[ext_resource type="Texture2D" uid="uid://c167ba0lhcx3g" path="res://models/Builds/houses/textures/rpgpp_lt_tex_a.png" id="8_cdbb7"]
 [ext_resource type="Texture2D" uid="uid://bgnjh5a1c57ra" path="res://models/environment/foliage/grass/textures/Grass_1.png" id="9_hkkxt"]
 [ext_resource type="Script" uid="uid://dh6tfng8b3kk8" path="res://scripts/camera.gd" id="10_ariur"]
 

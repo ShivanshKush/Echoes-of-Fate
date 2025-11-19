@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://cmh4sjpggv6d3"]
+[gd_scene load_steps=5 format=3 uid="uid://cmh4sjpggv6d3"]
 
 [ext_resource type="Script" uid="uid://cpdbksyuigdm3" path="res://scenes/main-menu/main_menu.gd" id="1_4p2w8"]
+[ext_resource type="Texture2D" uid="uid://k4qm8ixm7dle" path="res://scenes/main-menu/main_menu_background.jpg" id="2_7w8pu"]
+[ext_resource type="Texture2D" uid="uid://dpfbg67igtxfc" path="res://scenes/main-menu/button_background.png" id="3_nisa4"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_uhacv"]
+texture = ExtResource("3_nisa4")
 
 [node name="Root" type="Control"]
 layout_mode = 3
@@ -21,10 +26,26 @@ layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
 
+[node name="Sprite2D" type="Sprite2D" parent="Control"]
+position = Vector2(576.5, 324.5)
+scale = Vector2(1.0694443, 1.1793478)
+texture = ExtResource("2_7w8pu")
+
 [node name="Button" type="Button" parent="Control"]
 layout_mode = 0
-offset_left = 501.0
-offset_top = 307.0
-offset_right = 595.0
-offset_bottom = 338.0
+offset_left = 862.0
+offset_top = 325.0
+offset_right = 959.0
+offset_bottom = 364.0
+theme_override_styles/normal = SubResource("StyleBoxTexture_uhacv")
 text = "Play"
+
+[node name="Button2" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 861.0
+offset_top = 374.0
+offset_right = 958.0
+offset_bottom = 413.0
+theme_override_styles/normal = SubResource("StyleBoxTexture_uhacv")
+text = "Exit
+"

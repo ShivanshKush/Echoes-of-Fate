@@ -1,0 +1,15 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://dop0ogdxm718"
+valid=false
+
+[deps]
+
+source_file="res://models/map/chunks/chunk_6_6/npc_data.csv"
+
+[params]
+
+compress=true
+delimiter=0

@@ -17,7 +17,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-DialogueUI="*res://DialogueUI.tscn"
+DialogueUI="*res://scenes/Dialougues/DialogueUI.tscn"
 
 [editor_plugins]
 

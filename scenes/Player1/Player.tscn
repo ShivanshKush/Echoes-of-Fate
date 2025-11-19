@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvj77h7pfsmu"]
+
+[ext_resource type="Script" uid="uid://2kj67diqmqty" path="res://scenes/Player1/player.gd" id="1_xhfnw"]
+[ext_resource type="PackedScene" uid="uid://8joxy1170fae" path="res://models/characters/hero/hero.glb" id="2_kpjcp"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xhfnw"]
+radius = 0.26367188
+height = 1.401123
+
+[node name="Root" type="CharacterBody3D"]
+script = ExtResource("1_xhfnw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6041113, 0.012401342)
+shape = SubResource("CapsuleShape3D_xhfnw")
+
+[node name="Player" parent="." instance=ExtResource("2_kpjcp")]
+transform = Transform3D(-0.7, 0, -6.119594e-08, 0, 0.7, 0, 6.119594e-08, 0, -0.7, 0, 0, 0)
+
+[node name="RayCast3D" type="RayCast3D" parent="Player"]
+transform = Transform3D(-0.69994396, -0.0011555173, 0.0087799225, -0.003290311, 0.678267, -0.1730407, -0.008221685, -0.17306812, -0.6782181, 0, 1.6543776, 0)
+target_position = Vector3(0, -1, -3)

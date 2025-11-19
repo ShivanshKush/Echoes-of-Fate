@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://uja8bbpcvc0n"]
+[gd_scene load_steps=3 format=3 uid="uid://uja8bbpcvc0n"]
 
 [ext_resource type="Script" uid="uid://idndcnmp2cin" path="res://scenes/loader/loading_screen.gd" id="1_h67ek"]
+[ext_resource type="Texture2D" uid="uid://okgueyds8yhe" path="res://scenes/loader/Loading-screen.png" id="2_4e01j"]
 
 [node name="Root" type="Control"]
 layout_mode = 3
@@ -30,9 +31,14 @@ offset_bottom = 245.0
 theme_override_colors/font_color = Color(0.009404905, 0.009404905, 0.009404905, 1)
 text = "Loading..."
 
+[node name="LoadingScreen" type="Sprite2D" parent="Control"]
+position = Vector2(576, 324)
+scale = Vector2(1.125, 0.6328125)
+texture = ExtResource("2_4e01j")
+
 [node name="ProgressBar" type="ProgressBar" parent="Control"]
 layout_mode = 0
-offset_left = 440.0
-offset_top = 256.0
-offset_right = 709.0
-offset_bottom = 283.0
+offset_left = 430.0
+offset_top = 444.0
+offset_right = 699.0
+offset_bottom = 471.0

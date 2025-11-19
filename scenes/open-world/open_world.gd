@@ -5,6 +5,7 @@ extends Node3D
 @onready var player_node = $Player
 @onready var camera = $Camera3D
 @export var instance_data_path: String = "res://models/map/chunks/chunk_{x}_{y}/instance_data.csv"
+@export var npc_data_path: String = "res://models/map/chunks/chunk_{x}_{y}/npc_data.csv"
 @export var min_height: float = 14.4214935302734
 @export var max_height: float = 24.9670562744141
 
@@ -14,6 +15,18 @@ var heightmap_res: int = 128
 var foliagemap_path = "res://models/map/chunks/chunk_{x}_{y}/FoliageMap_Chunk_{x}_{y}.png"
 var foliagemaps: Dictionary[String, PackedFloat32Array] = {}
 var foliagemap_res: int = 1024
+
+### NPCs
+
+@export var npc1_scene: PackedScene = preload("res://scenes/NPCs/NPC.tscn")
+@export var npc2_scene: PackedScene = preload("res://scenes/NPCs/NPC_2.tscn")
+@export var npc3_scene: PackedScene = preload("res://scenes/NPCs/NPC_3.tscn")
+var npcScenesMap = {
+	"Farmer": npc1_scene,
+	"Lady": npc2_scene,
+	"Guard": npc3_scene,
+}
+#### NPCs
 
 #### GRASS
 @export var grass_chunk_scene: PackedScene = preload("res://models/environment/foliage/grass/grass-chunk.tscn")
@@ -52,6 +65,7 @@ func _ready():
 	var chunk_instance = load_and_spawn_chunk(spawn_chunk)
 	if chunk_instance:
 		var instances = read_instance_data(spawn_chunk, chunk_instance)
+		var npcs = read_npc_data(spawn_chunk, chunk_instance)
 		await get_tree().process_frame
 		for instance_name in instances:
 			#print(instance_name, " ", instances[instance_name].size())
@@ -63,6 +77,8 @@ func _ready():
 				var shape = generate_instance_collider(instance_name, shape_type)
 				if shape:
 					spawn_instances_in_chunk(instance_name, instances[instance_name], shape, chunk_instance)
+		for npc_name in npcs:
+			spawn_npcs_in_chunk(npc_name, npcs[npc_name], chunk_instance)
 		move_player_to_spawn(spawn_chunk)
 	
 		#### GRASS
@@ -348,6 +364,50 @@ func read_instance_data(chunk: Vector2, chunk_instance: Node) -> Dictionary:
 	
 	return instances
 
+func read_npc_data(chunk: Vector2, chunk_instance: Node) -> Dictionary:
+	var file = FileAccess.open(npc_data_path.format({"x": int(chunk.x), "y": int(chunk.y)}), FileAccess.READ)
+	if not file:
+		printerr("Failed to open npc data: ", chunk.x, ",", chunk.y)
+		return {}
+	var data = file.get_as_text()
+	var lines = data.split('\n', false)
+	
+	var npcs = {}
+	for idx in range(lines.size()):
+		# Skip CSV header
+		if idx == 0:
+			continue
+
+		var line = lines[idx]
+		var values = line.split(',', false)
+
+		var npc_type_name = values[0].strip_edges()
+		if !npcs.has(npc_type_name):
+			npcs[npc_type_name] = []
+		
+		var pos_x = float(values[1].strip_edges())
+		var pos_y = float(values[2].strip_edges())
+		var pos_z = float(values[3].strip_edges())
+		var rot_x = float(values[4].strip_edges())
+		var rot_y = float(values[5].strip_edges())
+		var rot_z = float(values[6].strip_edges())
+		var sca_x = float(values[7].strip_edges())
+		var sca_y = float(values[8].strip_edges())
+		var sca_z = float(values[9].strip_edges())
+		
+		#var pos_x_godot_relative = pos_x			# Godot X = Blender X
+		#var pos_y_godot_relative = pos_z			# Godot Y = Blender Z (Height)
+		#var pos_z_godot_relative = pos_y * -1.0 	# Godot Z = Blender Y (Inverted)
+		var correctedPos = Vector3(pos_x, pos_y, pos_z)
+
+		var pos = chunk_instance.global_position + correctedPos
+		var rot = Vector3(rot_x, rot_y, rot_z)
+		var sca = Vector3(sca_x, sca_y, sca_z)
+		
+		npcs[npc_type_name].append({"pos": pos, "rel_pos": correctedPos, "rot": rot, "sca": sca})
+	
+	return npcs
+
 func spawn_instances_in_chunk(instance_name: String, instance_transforms: Array, shape: Shape3D, chunk_instance: Node):
 	var multi_mesh_node = get_node("MultiMesh_%s" % instance_name)
 	if multi_mesh_node == null or multi_mesh_node.multimesh == null:
@@ -370,6 +430,18 @@ func spawn_instances_in_chunk(instance_name: String, instance_transforms: Array,
 	for i in range(transforms.size()):
 		multimesh.set_instance_transform(i, transforms[i])
 	#print("Finished setting up MultiMesh with %d instances." % multimesh.instance_count)
+
+func spawn_npcs_in_chunk(instance_name: String, instance_transforms: Array, chunk_instance: Node):	
+	for inst_transform in instance_transforms:
+		var transform_basis = Basis()
+		transform_basis = transform_basis.rotated(Vector3.UP, inst_transform.rot.y)
+		transform_basis = transform_basis.scaled(inst_transform.sca)
+		var instance_transform = Transform3D(transform_basis, inst_transform.pos)
+
+		var npc_scene = npcScenesMap[instance_name]
+		var npc_instance = npc_scene.instantiate()
+		npc_instance.transform = instance_transform
+		add_child(npc_instance)
 
 func generate_instance_collider(instance_name: String, shape_type: String):
 	var instance_mesh: ArrayMesh = get_mesh(instance_name)
