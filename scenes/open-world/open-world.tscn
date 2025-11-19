@@ -1,7 +1,8 @@
-[gd_scene load_steps=383 format=4 uid="uid://bie5gboypdeag"]
+[gd_scene load_steps=386 format=4 uid="uid://bie5gboypdeag"]
 
 [ext_resource type="PackedScene" uid="uid://dvj77h7pfsmu" path="res://Player.tscn" id="1_numat"]
 [ext_resource type="Script" uid="uid://b6akiyfniqxta" path="res://scenes/open-world/open_world.gd" id="1_y5iem"]
+[ext_resource type="Texture2D" uid="uid://ck0q254vq10s8" path="res://skybox/Epic_BlueSunset_EquiRect_flat.png" id="2_ih7wh"]
 [ext_resource type="Texture2D" uid="uid://cdy8lx0ux0lbv" path="res://models/environment/foliage/trees/textures/color_1024x1024.jpg" id="3_pwsy2"]
 [ext_resource type="Texture2D" uid="uid://csggxqr52m8l3" path="res://models/environment/foliage/rocks/textures/Rocks.png" id="4_0owae"]
 [ext_resource type="Texture2D" uid="uid://bd3vsyr3ar7qq" path="res://models/environment/foliage/rocks/textures/Image_0.jpg" id="5_cdbb7"]
@@ -10,12 +11,10 @@
 [ext_resource type="Texture2D" uid="uid://c167ba0lhcx3g" path="res://models/builds/houses/textures/rpgpp_lt_tex_a.png" id="8_cdbb7"]
 [ext_resource type="Texture2D" uid="uid://bgnjh5a1c57ra" path="res://models/environment/foliage/grass/textures/Grass_1.png" id="9_hkkxt"]
 [ext_resource type="Script" uid="uid://dh6tfng8b3kk8" path="res://scripts/camera.gd" id="10_ariur"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_fqhjb"]
-load_path = "res://.godot/imported/Epic_BlueSunset_EquiRect_flat.png-ed34823f103b9ef593caeff5b240feeb.s3tc.ctex"
+[ext_resource type="Shader" uid="uid://ctpnqshylufsq" path="res://post-processing/pixelate.gdshader" id="11_eo6ov"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_7u2t8"]
-panorama = SubResource("CompressedTexture2D_fqhjb")
+panorama = ExtResource("2_ih7wh")
 
 [sub_resource type="Sky" id="Sky_vhxcc"]
 sky_material = SubResource("PanoramaSkyMaterial_7u2t8")
@@ -24,6 +23,22 @@ sky_material = SubResource("PanoramaSkyMaterial_7u2t8")
 background_mode = 2
 background_energy_multiplier = 1.2
 sky = SubResource("Sky_vhxcc")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ariur"]
+render_priority = 0
+shader = ExtResource("11_eo6ov")
+shader_parameter/depth_threshold = 0.05
+shader_parameter/reverse_depth_threshold = 0.25
+shader_parameter/normal_threshold = 0.6
+shader_parameter/darken_amount = 0.3
+shader_parameter/lighten_amount = 1.5
+shader_parameter/normal_edge_bias = Vector3(1, 1, 1)
+shader_parameter/light_direction = Vector3(-0.96, -0.18, 0.2)
+
+[sub_resource type="QuadMesh" id="QuadMesh_ariur"]
+material = SubResource("ShaderMaterial_ariur")
+flip_faces = true
+size = Vector2(2, 2)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5mut7"]
 resource_name = "tree_color"
@@ -4958,6 +4973,7 @@ shadow_mesh = SubResource("ArrayMesh_dolmq")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lh27k"]
 resource_name = "Material.001"
+render_priority = 1
 transparency = 4
 cull_mode = 2
 albedo_texture = ExtResource("9_hkkxt")
@@ -4984,515 +5000,542 @@ blend_shape_mode = 0
 script = ExtResource("1_y5iem")
 metadata/_edit_group_ = true
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 3
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(426, 240)
+render_target_update_mode = 4
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="SubViewportContainer/SubViewport"]
 environment = SubResource("Environment_fd7vl")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewportContainer/SubViewport"]
 transform = Transform3D(0.7071068, 0.61237246, -0.35355338, 0, 0.49999997, 0.86602545, 0.7071068, -0.61237246, 0.35355338, -69.5, 51.489426, 40.9)
 
-[node name="Camera3D" type="Camera3D" parent="."]
-current = true
+[node name="CameraRig" type="Node3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 0, 0)
 script = ExtResource("10_ariur")
 
-[node name="Player" parent="." instance=ExtResource("1_numat")]
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport/CameraRig"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 50)
+projection = 1
+current = true
+size = 5.0
 
-[node name="Tree" type="Node3D" parent="."]
+[node name="PostProcessing" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/CameraRig/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, -16)
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_ariur")
+skeleton = NodePath("../../..")
+
+[node name="Player" parent="SubViewportContainer/SubViewport" instance=ExtResource("1_numat")]
+
+[node name="Tree" type="Node3D" parent="SubViewportContainer/SubViewport"]
 visible = false
 
-[node name="Tree_1" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_1" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_yuom7")
 skeleton = NodePath("")
 
-[node name="Tree_2" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_2" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_s0lnt")
 skeleton = NodePath("")
 
-[node name="Tree_3" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_3" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_4p5kr")
 skeleton = NodePath("")
 
-[node name="Tree_4" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_4" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_4w2q3")
 skeleton = NodePath("")
 
-[node name="Tree_5" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_5" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_feyf1")
 skeleton = NodePath("")
 
-[node name="Tree_6" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_6" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_hs64w")
 skeleton = NodePath("")
 
-[node name="Tree_7" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_7" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_r37xr")
 skeleton = NodePath("")
 
-[node name="Tree_8" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_8" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_omkxm")
 skeleton = NodePath("")
 
-[node name="Tree_9" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_9" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_cs011")
 skeleton = NodePath("")
 
-[node name="Tree_10" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_10" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_o3lks")
 skeleton = NodePath("")
 
-[node name="Tree_11" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_11" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_awom1")
 skeleton = NodePath("")
 
-[node name="Tree_12" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_12" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_ago1d")
 skeleton = NodePath("")
 
-[node name="Tree_13" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_13" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_b30n6")
 skeleton = NodePath("")
 
-[node name="Tree_14" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_14" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_cdsw0")
 skeleton = NodePath("")
 
-[node name="Tree_15" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_15" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_gj8s5")
 skeleton = NodePath("")
 
-[node name="Tree_16" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_16" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_kya0y")
 skeleton = NodePath("")
 
-[node name="Tree_17" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_17" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_x3ffm")
 skeleton = NodePath("")
 
-[node name="Tree_18" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_18" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_ttk6b")
 skeleton = NodePath("")
 
-[node name="Tree_19" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_19" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_xjolh")
 skeleton = NodePath("")
 
-[node name="Tree_20" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_20" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_l82ce")
 skeleton = NodePath("")
 
-[node name="Tree_21" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_21" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_djbk5")
 skeleton = NodePath("")
 
-[node name="Tree_22" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_22" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_8n0ka")
 skeleton = NodePath("")
 
-[node name="Tree_23" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_23" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_ur0ha")
 skeleton = NodePath("")
 
-[node name="Tree_24" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_24" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_d0642")
 skeleton = NodePath("")
 
-[node name="Tree_25" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_25" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_hy2ca")
 skeleton = NodePath("")
 
-[node name="Tree_26" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_26" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_dpdr2")
 skeleton = NodePath("")
 
-[node name="Tree_27" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_27" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_h1tti")
 skeleton = NodePath("")
 
-[node name="Tree_28" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_28" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_yn1dd")
 skeleton = NodePath("")
 
-[node name="Tree_29" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_29" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_1dahm")
 skeleton = NodePath("")
 
-[node name="Tree_30" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_30" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_s2e2j")
 skeleton = NodePath("")
 
-[node name="Tree_31" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_31" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_nmhs8")
 skeleton = NodePath("")
 
-[node name="Tree_32" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_32" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_rjvu2")
 skeleton = NodePath("")
 
-[node name="Tree_33" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_33" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_hky6u")
 skeleton = NodePath("")
 
-[node name="Tree_34" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_34" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_pcvmw")
 skeleton = NodePath("")
 
-[node name="Tree_35" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_35" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_1qx6t")
 skeleton = NodePath("")
 
-[node name="Tree_36" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_36" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_o7lbq")
 skeleton = NodePath("")
 
-[node name="Tree_37" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_37" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_v6jw4")
 skeleton = NodePath("")
 
-[node name="Tree_38" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_38" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_o4ow0")
 skeleton = NodePath("")
 
-[node name="Tree_39" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_39" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_0nxdn")
 skeleton = NodePath("")
 
-[node name="Tree_40" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_40" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_17os0")
 skeleton = NodePath("")
 
-[node name="Tree_41" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_41" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_ecksu")
 skeleton = NodePath("")
 
-[node name="Tree_42" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_42" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_ss1pg")
 skeleton = NodePath("")
 
-[node name="Tree_43" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_43" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_2xo0h")
 skeleton = NodePath("")
 
-[node name="Tree_44" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_44" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_60cw5")
 skeleton = NodePath("")
 
-[node name="Tree_45" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_45" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_emh7g")
 skeleton = NodePath("")
 
-[node name="Tree_46" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_46" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_12yq5")
 skeleton = NodePath("")
 
-[node name="Tree_47" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_47" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_x061i")
 skeleton = NodePath("")
 
-[node name="Tree_48" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_48" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_ynknt")
 skeleton = NodePath("")
 
-[node name="Tree_49" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_49" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_j1wly")
 skeleton = NodePath("")
 
-[node name="Tree_50" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_50" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_6vh4a")
 skeleton = NodePath("")
 
-[node name="Tree_51" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_51" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_4qcrc")
 skeleton = NodePath("")
 
-[node name="Tree_52" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_52" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_sxlte")
 skeleton = NodePath("")
 
-[node name="Tree_53" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_53" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_u7tgu")
 skeleton = NodePath("")
 
-[node name="Tree_54" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_54" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_go371")
 skeleton = NodePath("")
 
-[node name="Tree_55" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_55" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_cs0xl")
 skeleton = NodePath("")
 
-[node name="Tree_56" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_56" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_v8gkc")
 skeleton = NodePath("")
 
-[node name="Tree_57" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_57" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_ynmxs")
 skeleton = NodePath("")
 
-[node name="Tree_58" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_58" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_b50vb")
 skeleton = NodePath("")
 
-[node name="Tree_59" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_59" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_5wpe7")
 skeleton = NodePath("")
 
-[node name="Tree_60" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_60" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_wayss")
 skeleton = NodePath("")
 
-[node name="Tree_61" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_61" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_3pinr")
 skeleton = NodePath("")
 
-[node name="Tree_62" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_62" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_il8df")
 skeleton = NodePath("")
 
-[node name="Tree_63" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_63" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_4jvu7")
 skeleton = NodePath("")
 
-[node name="Tree_64" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_64" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_82c7g")
 skeleton = NodePath("")
 
-[node name="Tree_65" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_65" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_p45ke")
 skeleton = NodePath("")
 
-[node name="Tree_66" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_66" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_yelc7")
 skeleton = NodePath("")
 
-[node name="Tree_67" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_67" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_ayv34")
 skeleton = NodePath("")
 
-[node name="Tree_68" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_68" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_8ao8a")
 skeleton = NodePath("")
 
-[node name="Tree_69" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_69" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_1f3e1")
 skeleton = NodePath("")
 
-[node name="Tree_70" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_70" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_j2h4n")
 skeleton = NodePath("")
 
-[node name="Tree_71" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_71" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_elsn2")
 skeleton = NodePath("")
 
-[node name="Tree_72" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_72" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_u7ky4")
 skeleton = NodePath("")
 
-[node name="Tree_73" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_73" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_b3rms")
 skeleton = NodePath("")
 
-[node name="Tree_74" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_74" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_cr4yi")
 skeleton = NodePath("")
 
-[node name="Tree_75" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_75" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_04xij")
 skeleton = NodePath("")
 
-[node name="Tree_76" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_76" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_8yxe5")
 skeleton = NodePath("")
 
-[node name="Tree_77" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_77" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_1tq0r")
 skeleton = NodePath("")
 
-[node name="Tree_78" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_78" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_kie7v")
 skeleton = NodePath("")
 
-[node name="Tree_79" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_79" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_eyw3n")
 skeleton = NodePath("")
 
-[node name="Tree_80" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_80" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_86tpb")
 skeleton = NodePath("")
 
-[node name="Tree_101" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_101" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_11nib")
 skeleton = NodePath("")
 
-[node name="Tree_102" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_102" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_lk4i8")
 skeleton = NodePath("")
 
-[node name="Tree_103" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_103" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_kqhe2")
 skeleton = NodePath("")
 
-[node name="Tree_104" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_104" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_xgs8d")
 skeleton = NodePath("")
 
-[node name="Tree_105" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_105" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_0ojd5")
 skeleton = NodePath("")
 
-[node name="Tree_106" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_106" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_2a3lf")
 skeleton = NodePath("")
 
-[node name="Tree_107" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_107" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_c8sau")
 skeleton = NodePath("")
 
-[node name="Tree_108" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_108" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_cx63p")
 skeleton = NodePath("")
 
-[node name="Tree_109" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_109" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_axc2q")
 skeleton = NodePath("")
 
-[node name="Tree_110" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_110" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_hsr1b")
 skeleton = NodePath("")
 
-[node name="Tree_111" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_111" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_26clw")
 skeleton = NodePath("")
 
-[node name="Tree_112" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_112" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_xi1oa")
 skeleton = NodePath("")
 
-[node name="Tree_113" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_113" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_wtqaq")
 skeleton = NodePath("")
 
-[node name="Tree_114" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_114" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_dkrct")
 skeleton = NodePath("")
 
-[node name="Tree_115" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_115" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_w4u1b")
 skeleton = NodePath("")
 
-[node name="Tree_116" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_116" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_iwx3i")
 skeleton = NodePath("")
 
-[node name="Tree_117" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_117" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_3he4n")
 skeleton = NodePath("")
 
-[node name="Tree_118" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_118" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_3mt6t")
 skeleton = NodePath("")
 
-[node name="Tree_119" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_119" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_odbpg")
 skeleton = NodePath("")
 
-[node name="Tree_120" type="MeshInstance3D" parent="Tree"]
+[node name="Tree_120" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Tree"]
 mesh = SubResource("ArrayMesh_1o34u")
 skeleton = NodePath("")
 
-[node name="Log" type="Node3D" parent="."]
+[node name="Log" type="Node3D" parent="SubViewportContainer/SubViewport"]
 visible = false
 
-[node name="Log_1" type="MeshInstance3D" parent="Log"]
+[node name="Log_1" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Log"]
 mesh = SubResource("ArrayMesh_dtjhi")
 skeleton = NodePath("")
 
-[node name="Log_2" type="MeshInstance3D" parent="Log"]
+[node name="Log_2" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Log"]
 mesh = SubResource("ArrayMesh_kdr24")
 skeleton = NodePath("")
 
-[node name="Log_3" type="MeshInstance3D" parent="Log"]
+[node name="Log_3" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Log"]
 mesh = SubResource("ArrayMesh_ecoyu")
 skeleton = NodePath("")
 
-[node name="Log_4" type="MeshInstance3D" parent="Log"]
+[node name="Log_4" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Log"]
 mesh = SubResource("ArrayMesh_j7gdg")
 skeleton = NodePath("")
 
-[node name="Log_5" type="MeshInstance3D" parent="Log"]
+[node name="Log_5" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Log"]
 mesh = SubResource("ArrayMesh_ixtkt")
 skeleton = NodePath("")
 
-[node name="Rock" type="Node3D" parent="."]
+[node name="Rock" type="Node3D" parent="SubViewportContainer/SubViewport"]
 visible = false
 
-[node name="Rock_1" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_1" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_gtavq")
 skeleton = NodePath("")
 
-[node name="Rock_2" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_2" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_1x4qs")
 skeleton = NodePath("")
 
-[node name="Rock_3" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_3" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_lepgc")
 skeleton = NodePath("")
 
-[node name="Rock_4" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_4" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_vg3jv")
 skeleton = NodePath("")
 
-[node name="Rock_5" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_5" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 mesh = SubResource("ArrayMesh_bcs7y")
 skeleton = NodePath("")
 
-[node name="Rock_6" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_6" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_5h3r8")
 skeleton = NodePath("")
 
-[node name="Rock_7" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_7" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_33x8x")
 skeleton = NodePath("")
 
-[node name="Rock_8" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_8" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_s10ig")
 skeleton = NodePath("")
 
-[node name="Rock_9" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_9" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_eklh4")
 skeleton = NodePath("")
 
-[node name="Rock_10" type="MeshInstance3D" parent="Rock"]
+[node name="Rock_10" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Rock"]
 mesh = SubResource("ArrayMesh_80kee")
 skeleton = NodePath("")
 
-[node name="House" type="Node3D" parent="."]
+[node name="House" type="Node3D" parent="SubViewportContainer/SubViewport"]
 visible = false
 
-[node name="House_1" type="MeshInstance3D" parent="House"]
+[node name="House_1" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/House"]
 mesh = SubResource("ArrayMesh_8w7pi")
 skeleton = NodePath("")
 
-[node name="House_2" type="MeshInstance3D" parent="House"]
+[node name="House_2" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/House"]
 mesh = SubResource("ArrayMesh_o3k3b")
 skeleton = NodePath("")
 
-[node name="House_3" type="MeshInstance3D" parent="House"]
+[node name="House_3" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/House"]
 mesh = SubResource("ArrayMesh_d3pi7")
 skeleton = NodePath("")
 
-[node name="House_4" type="MeshInstance3D" parent="House"]
+[node name="House_4" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/House"]
 mesh = SubResource("ArrayMesh_tr7pj")
 skeleton = NodePath("")
 
-[node name="House_5" type="MeshInstance3D" parent="House"]
+[node name="House_5" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/House"]
 mesh = SubResource("ArrayMesh_72wmp")
 skeleton = NodePath("")
 
-[node name="Grass" type="Node3D" parent="."]
+[node name="Grass" type="Node3D" parent="SubViewportContainer/SubViewport"]
 visible = false
 
-[node name="Grass_1" type="MeshInstance3D" parent="Grass"]
+[node name="Grass_1" type="MeshInstance3D" parent="SubViewportContainer/SubViewport/Grass"]
 transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
 mesh = SubResource("ArrayMesh_y0dmq")
 skeleton = NodePath("")

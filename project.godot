@@ -19,6 +19,11 @@ config/icon="res://icon.svg"
 
 DialogueUI="*res://DialogueUI.tscn"
 
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/asset_placer/plugin.cfg")

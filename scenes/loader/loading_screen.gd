@@ -29,6 +29,8 @@ func _process(_delta):
 
 func _on_scene_loaded(resource: Resource):
 	label.text = "Starting..."
+	progress_bar.queue_free()
+	_load_state = ""
 	await get_tree().create_timer(0.2).timeout
 
 	var scene = resource.instantiate()

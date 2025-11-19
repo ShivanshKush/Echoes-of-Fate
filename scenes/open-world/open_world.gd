@@ -2,12 +2,11 @@ extends Node3D
 
 @export var spawn_chunk: = Vector2(6, 6)
 @export var chunk_scene_path: String = "res://models/map/chunks/chunk_{x}_{y}/Chunk_{x}_{y}.glb"
-@onready var player_node = $Player
-@onready var camera = $Camera3D
 @export var instance_data_path: String = "res://models/map/chunks/chunk_{x}_{y}/instance_data.csv"
 @export var min_height: float = 14.4214935302734
 @export var max_height: float = 24.9670562744141
 
+@onready var viewport: SubViewport = $SubViewportContainer/SubViewport
 var heightmap_path: String = "res://models/map/chunks/chunk_{x}_{y}/HeightMap_Chunk_{x}_{y}.png"
 var heightmaps: Dictionary[String, PackedFloat32Array] = {}
 var heightmap_res: int = 128
@@ -15,10 +14,12 @@ var foliagemap_path = "res://models/map/chunks/chunk_{x}_{y}/FoliageMap_Chunk_{x
 var foliagemaps: Dictionary[String, PackedFloat32Array] = {}
 var foliagemap_res: int = 1024
 
+var player: Node3D
+var camera_rig: Node3D
+
 #### GRASS
 @export var grass_chunk_scene: PackedScene = preload("res://models/environment/foliage/grass/grass-chunk.tscn")
-#@export var grass_mesh_source: MeshInstance3D = $Grass/Grass_1
-@onready var grass_mesh_source: MeshInstance3D = $Grass/Grass_1
+@onready var grass_mesh_source: MeshInstance3D = $SubViewportContainer/SubViewport/Grass/Grass_1
 @export var grass_draw_radius: int = 10
 @export var grass_chunk_size: float = 5.0
 var half_grass_chunk_size = grass_chunk_size / 2.0
@@ -47,7 +48,14 @@ func get_chunk_pos_from_player(player_pos: Vector3):
 	return Vector2(chunk_x, chunk_y)
 
 func _ready():
-	player_node.camera_ref = camera
+	player = get_tree().get_first_node_in_group("player")
+	if not player:
+		printerr("Player not found")
+	camera_rig = get_tree().get_first_node_in_group("camera")
+	if not camera_rig:
+		printerr("Camera not found")
+
+	player.camera_ref = camera_rig.get_node("Camera3D")
 
 	var chunk_instance = load_and_spawn_chunk(spawn_chunk)
 	if chunk_instance:
@@ -69,16 +77,16 @@ func _ready():
 		if is_instance_valid(grass_mesh_source) && grass_mesh_source.mesh != null:
 			draw_distance_grass_chunks = int(ceil(grass_draw_radius / grass_chunk_size))
 			# Initial grid load
-			var player_in_terrain_chunk = get_chunk_pos_from_player(player_node.global_position)
+			var player_in_terrain_chunk = get_chunk_pos_from_player(player.global_position)
 			var player_in_terrain_chunk_key = "{x}_{y}".format({"x": int(player_in_terrain_chunk.x), "y": int(player_in_terrain_chunk.y)})
 			#print("Player in chunk: ", player_in_terrain_chunk.x, ", ", player_in_terrain_chunk.y)
-			update_grass_grid(player_node.global_position, player_in_terrain_chunk, player_in_terrain_chunk_key)
+			update_grass_grid(player.global_position, player_in_terrain_chunk, player_in_terrain_chunk_key)
 		else:
 			printerr("Grass Mesh Source is invalid. Cannot start grass system.")
 		#### GRASS
 
 func _process(_delta):
-	var player_pos = player_node.global_position
+	var player_pos = player.global_position
 	# Calculate player's current chunk index
 	var current_grass_chunk_x = floor(player_pos.x / grass_chunk_size)
 	var current_grass_chunk_z = floor(player_pos.z / grass_chunk_size)
@@ -216,7 +224,7 @@ func load_grass_chunk(x: int, z: int, terrain_chunk: Vector2, terrain_chunk_key:
 	grass_chunk_instance.global_position = Vector3(grass_chunk_pos_x, 0, grass_chunk_pos_z)
 	grass_chunk_instance.generate_grass(x, z, terrain_chunk, terrain_chunk_key)
 	# Parent the grass chunk to this manager or a dedicated grass root node
-	add_child(grass_chunk_instance)
+	viewport.add_child(grass_chunk_instance)
 	loaded_grass_chunks[key] = grass_chunk_instance
 
 func unload_grass_chunk(key: String):
@@ -239,7 +247,7 @@ func load_and_spawn_chunk(chunk: Vector2) -> Node:
 		var global_chunk_pos = get_chunk_pos(chunk)
 		chunk_instance.global_position = Vector3(global_chunk_pos.x, 0.0, global_chunk_pos.z)
 
-		add_child(chunk_instance)
+		viewport.add_child(chunk_instance)
 		print("Spawned chunk: " + chunk_path)
 		return chunk_instance
 	else:
@@ -247,7 +255,7 @@ func load_and_spawn_chunk(chunk: Vector2) -> Node:
 		return null
 
 func move_player_to_spawn(chunk: Vector2):
-	if not is_instance_valid(player_node):
+	if not is_instance_valid(player):
 		printerr("Player node not found at specified path.")
 		return
 
@@ -259,7 +267,7 @@ func move_player_to_spawn(chunk: Vector2):
 
 	var space_state = get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(ray_start, ray_end)
-	query.exclude = [player_node.get_rid()] 
+	query.exclude = [player.get_rid()] 
 	
 	var result = space_state.intersect_ray(query)
 
@@ -267,13 +275,13 @@ func move_player_to_spawn(chunk: Vector2):
 		var ground_y = result.position.y
 		var player_offset_y = 1.0
 		
-		player_node.global_position = Vector3(target_xz.x, ground_y + player_offset_y, target_xz.z)
-		print("Player moved to spawn position: " + str(player_node.global_position))
+		player.global_position = Vector3(target_xz.x, ground_y + player_offset_y, target_xz.z)
+		print("Player moved to spawn position: " + str(player.global_position))
 	else:
 		printerr("Raycast missed terrain.")
 
 func get_mesh(instance_name: String) -> Mesh:
-	var node = get_node("{type}/{name}".format({
+	var node = get_node("SubViewportContainer/SubViewport/{type}/{name}".format({
 		"type": instance_name.substr(0, instance_name.rfind("_")),
 		"name": instance_name})
 	)
@@ -291,7 +299,7 @@ func setup_multimesh(instance_name: String) -> MultiMeshInstance3D:
 
 	var multi_mesh_node = MultiMeshInstance3D.new()
 	multi_mesh_node.name = "MultiMesh_%s" % instance_name
-	add_child(multi_mesh_node)
+	viewport.add_child(multi_mesh_node)
 	if instance_mesh:
 		multi_mesh_node.multimesh = MultiMesh.new()
 		var multimesh_resource = multi_mesh_node.multimesh
@@ -349,7 +357,7 @@ func read_instance_data(chunk: Vector2, chunk_instance: Node) -> Dictionary:
 	return instances
 
 func spawn_instances_in_chunk(instance_name: String, instance_transforms: Array, shape: Shape3D, chunk_instance: Node):
-	var multi_mesh_node = get_node("MultiMesh_%s" % instance_name)
+	var multi_mesh_node = get_node("SubViewportContainer/SubViewport/MultiMesh_%s" % instance_name)
 	if multi_mesh_node == null or multi_mesh_node.multimesh == null:
 		printerr("MultiMeshInstance3D or its MultiMesh resource is not set up correctly.")
 		return

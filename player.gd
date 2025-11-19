@@ -7,17 +7,15 @@ extends CharacterBody3D
 @onready var raycast = $Player/RayCast3D
 var camera_ref: Camera3D = null
 
-
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 var move_speed: float = 5.0
 var rotation_speed: float = 8.0 # smoothing factor
-
 
 func _ready():
 	#Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	if DialogueUI:
 		DialogueUI.hide_box()
-
+	add_to_group("player")
 
 func _unhandled_input(event):
 	#if event.is_action_pressed("ui_cancel"):
